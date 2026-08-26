@@ -1,9 +1,23 @@
 const STORAGE_KEY = 'todos';
 
+function genId() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+}
+
+function isValidTodo(t) {
+    return t && typeof t.id !== 'undefined' && typeof t.text === 'string' && typeof t.completed === 'boolean';
+}
+
 function loadTodos() {
     try {
         const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
+        if (!data) return [];
+        const parsed = JSON.parse(data);
+        if (!Array.isArray(parsed)) return [];
+        return parsed.filter(isValidTodo);
     } catch (e) {
         console.warn('localStorage 載入失敗:', e);
         return [];
@@ -20,9 +34,16 @@ function saveTodos(todos) {
 
 function renderTodos() {
     const list = document.getElementById('todo-list');
+    const emptyHint = document.getElementById('empty-hint');
     const todos = loadTodos();
     
     list.innerHTML = '';
+    
+    if (todos.length === 0) {
+        emptyHint.hidden = false;
+        return;
+    }
+    emptyHint.hidden = true;
     
     todos.forEach(todo => {
         const li = document.createElement('li');
@@ -52,7 +73,7 @@ function addTodo(text) {
     
     const todos = loadTodos();
     const newTodo = {
-        id: Date.now(),
+        id: genId(),
         text: text.trim(),
         completed: false
     };
@@ -85,27 +106,22 @@ function deleteTodo(id) {
 document.addEventListener('DOMContentLoaded', () => {
     renderTodos();
     
+    const form = document.getElementById('todo-form');
     const input = document.getElementById('todo-input');
-    const addBtn = document.getElementById('add-btn');
     const list = document.getElementById('todo-list');
     
-    addBtn.addEventListener('click', () => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
         addTodo(input.value);
         input.value = '';
-    });
-    
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            addTodo(input.value);
-            input.value = '';
-        }
+        input.focus();
     });
     
     list.addEventListener('click', (e) => {
         const li = e.target.closest('li');
         if (!li) return;
         
-        const id = parseInt(li.dataset.id);
+        const id = li.dataset.id;
         
         if (e.target.type === 'checkbox') {
             toggleTodo(id);

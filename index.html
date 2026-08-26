@@ -9,9 +9,13 @@
 <body>
     <header>
         <h1>Todo List</h1>
-        <input type="text" id="todo-input" placeholder="新增 todo...">
-        <button id="add-btn">新增</button>
+        <form id="todo-form">
+            <label for="todo-input" class="sr-only">新增待辦事項</label>
+            <input type="text" id="todo-input" placeholder="新增 todo..." aria-label="新增待辦事項" autocomplete="off">
+            <button type="submit" id="add-btn">新增</button>
+        </form>
     </header>
+    <p id="empty-hint" class="empty-hint" hidden>目前沒有待辦事項，新增一筆開始吧！</p>
     <ul id="todo-list"></ul>
     <script src="app.js"></script>
 </body>
