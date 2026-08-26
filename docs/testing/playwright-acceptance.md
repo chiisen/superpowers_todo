@@ -4,60 +4,26 @@
 
 ## 前置安裝
 
-需在專案外或專案內安裝 Playwright（本測試直接使用 `bun` 執行腳本）：
+本專案以 `package.json` 管理測試依賴，只需：
 
 ```bash
-bun add playwright
+bun install
 bunx playwright install chromium
 ```
 
-> 說明：為避免污染靜態專案，可於臨時目錄（如 `/tmp/browse-qa`）安裝，再從該目錄執行腳本並指向本專案路徑。
+> 說明：`node_modules/` 已在 `.gitignore` 忽略，不會進入版控。
 
-## 執行腳本
+## 執行
 
-在可讀取本專案的目錄建立 `qa.ts`，以 `http://` 提供頁面（避免 `file://` 下 `localStorage` 限制），再用腳本模擬 5 項操作：
-
-```ts
-import { chromium } from 'playwright';
-
-const server = Bun.serve({
-  port: 0,
-  async fetch(req) {
-    const p = new URL(req.url).pathname === '/' ? '/index.html' : new URL(req.url).pathname;
-    const file = Bun.file('.' + p);
-    return (await file.exists()) ? new Response(file) : new Response('404', { status: 404 });
-  },
-});
-const base = `http://localhost:${server.port}/index.html`;
-
-const browser = await chromium.launch();
-const page = await browser.newPage();
-const errors: string[] = [];
-page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
-
-await page.goto(base);
-await page.waitForSelector('#todo-list', { state: 'attached' });
-await page.evaluate(() => localStorage.removeItem('todos'));
-await page.reload();
-await page.waitForSelector('#todo-list', { state: 'attached' });
-
-await page.fill('#todo-input', '買牛奶'); await page.click('#add-btn');
-await page.fill('#todo-input', '寫程式'); await page.press('#todo-input', 'Enter');
-await page.locator('#todo-list li').first().locator('input[type=checkbox]').check();
-const before = await page.locator('#todo-list li').count();
-await page.locator('#todo-list li').first().locator('button.delete-btn').click();
-await page.reload();
-await page.waitForSelector('#todo-list', { state: 'attached' });
-
-const final = await page.locator('#todo-list li').count();
-const ls = await page.evaluate(() => localStorage.getItem('todos'));
-console.log('剩餘項目 =', final, '| localStorage =', ls, '| 錯誤 =', errors);
-
-await browser.close();
-server.stop();
+```bash
+bun test
+# 或
+bun tests/acceptance.mjs
 ```
 
-完整逐項斷言版（含 5 項明確斷言與通過/失敗輸出）曾於 2026-08-26 實際執行，對應紀錄見 [Issue #1](https://github.com/chiisen/superpowers_todo/issues/1)。
+腳本位於 `tests/acceptance.mjs`，會以 `http://` 提供專案（避免 `file://` 下 `localStorage` 限制），並跑完 5 項斷言：新增 / Enter 新增 / 勾選 / 刪除 / 重整後 localStorage 保留，且無 JS 控制台錯誤。
+
+完整逐項斷言版曾於 2026-08-26 實際執行，對應紀錄見 [Issue #1](https://github.com/chiisen/superpowers_todo/issues/1)。
 
 ## 驗收結果（2026-08-26）
 
