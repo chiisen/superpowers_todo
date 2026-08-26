@@ -16,8 +16,8 @@
 | 4. 分段呈現設計 | ✅ 完成 | `Checklist #5`: 分段呈現，每段逐一批准 |
 | 5. 寫設計文件 | ✅ 完成 | `Checklist #6`: 存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` |
 | 6. Spec 自我審查 | ✅ 完成 | `Checklist #7`: 檢查 placeholder/矛盾/模糊/範圍 |
-| 7. 用戶審查 spec | ⏳ 待批准 | `User Review Gate`: 等待用戶批准才能進入實作 |
-| 8. 調用 writing-plans | 🔒 等待 | `Checklist #9`: 批准後才能調用 writing-plans skill |
+| 7. 用戶審查 spec | ✅ 完成 | `User Review Gate`: 用戶已批准 spec，進入實作 |
+| 8. 調用 writing-plans | ✅ 完成 | `Checklist #9`: 已調用 writing-plans skill 建立計劃 |
 
 ---
 
@@ -309,6 +309,22 @@
 ## 如何執行
 
 用瀏覽器打開 `index.html` 即可運行。
+
+---
+
+## 最終驗收結果
+
+依 `docs/superpowers/plans/2026-03-30-todo-plan.md` Task 9，於 2026-03-30 開發 session 完成驗收：
+
+| # | 檢查項目 | 結果 |
+|---|---------|------|
+| 1 | 輸入文字點「新增」→ 項目出現 | ✅ 通過 |
+| 2 | 輸入文字按 Enter → 項目出現 | ✅ 通過 |
+| 3 | 勾選 checkbox → completed 樣式變化 | ✅ 通過 |
+| 4 | 按「刪除」→ 項目消失 | ✅ 通過 |
+| 5 | 重新載入頁面 → todos 保留 | ✅ 通過 |
+
+> 瀏覽器端自動化複驗尚未執行，追蹤於 [Issue #1](https://github.com/chiisen/superpowers_todo/issues/1)。
 
 ---
 
