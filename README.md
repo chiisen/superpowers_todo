@@ -312,6 +312,41 @@
 
 ---
 
+## 多帳號同步架構
+
+本專案採用**影子儲存庫 (shadow repos)** 架構，將程式碼同步至 4 個 GitHub 帳號：
+
+| 帳號 | 角色 | 用途 |
+|------|------|------|
+| `chiisen` | 主帳號 | 開發者本人，主要開發 |
+| `edwin45168899` | 影子 | 備援 / 分發 |
+| `edwiin1688` | 影子 | 備援 / 分發 |
+| `NathanEvans1221` | 影子 | 備援 / 分發 |
+
+### 設計意圖
+
+影子帳號是**刻意設計**，並非遺留設定。目的是讓程式碼同步備份於多個帳號，避免單一帳號失效導致資料遺失。
+
+### 設定方式
+
+首次 clone 專案後，執行 `setup_git_sync.ps1` 一次：
+
+```powershell
+./setup_git_sync.ps1
+```
+
+此腳本會將 4 個遠端 URL 加入 `origin` 的 push URL list。後續 `git push` 會自動推送至所有 4 個遠端。
+
+### 注意事項
+
+- 腳本**不具幂等性**，重複執行會累加 URL。需重設時請先 `git remote set-url --delete --push origin <url>`
+- 各帳號的 SSH config（如 `github.com-chiisen`、`github.com-edwiin1688`）需先設定於 `~/.ssh/config`
+- 每個影子 repo 需先在 GitHub 上手動建立
+
+詳細討論見 [Issue #4](https://github.com/chiisen/superpowers_todo/issues/4)。
+
+---
+
 ## 最終驗收結果
 
 依 `docs/superpowers/plans/2026-03-30-todo-plan.md` Task 9，於 2026-03-30 開發 session 完成驗收：
