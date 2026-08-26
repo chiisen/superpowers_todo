@@ -45,6 +45,7 @@ function renderTodos() {
     }
     emptyHint.hidden = true;
 
+
     todos.forEach(todo => {
         const li = document.createElement('li');
         li.className = todo.completed ? 'completed' : '';
