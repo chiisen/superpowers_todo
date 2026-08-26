@@ -23,6 +23,9 @@ node_modules/
 dist/
 build/
 
+# Graphify tool output
+graphify-out/
+
 # Environment
 .env
 .env.local
