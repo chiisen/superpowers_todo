@@ -1,8 +1,9 @@
 const STORAGE_KEY = 'todos';
 
 function genId() {
-    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-        return crypto.randomUUID();
+    const c = (typeof self !== 'undefined' && self.crypto) || (typeof crypto !== 'undefined' ? crypto : null);
+    if (c && typeof c.randomUUID === 'function') {
+        return c.randomUUID();
     }
     return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
 }
@@ -25,10 +26,16 @@ function loadTodos() {
 }
 
 function saveTodos(todos) {
+    const warning = document.getElementById('storage-warning');
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+        if (warning) warning.hidden = true;
     } catch (e) {
         console.warn('localStorage 儲存失敗:', e);
+        if (warning) {
+            warning.textContent = '⚠️ 待辦事項無法儲存（localStorage 可能已滿或被停用），本次變更不會保留。';
+            warning.hidden = false;
+        }
     }
 }
 
@@ -52,19 +59,26 @@ function renderTodos() {
         li.className = todo.completed ? 'completed' : '';
         li.dataset.id = todo.id;
         
+        const label = document.createElement('label');
+        label.className = 'todo-label';
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = todo.completed;
-        
+
         const span = document.createElement('span');
         span.textContent = todo.text;
-        
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
+        deleteBtn.type = 'button';
         deleteBtn.textContent = '刪除';
-        
-        li.appendChild(checkbox);
-        li.appendChild(span);
+        deleteBtn.setAttribute('aria-label', '刪除：' + todo.text);
+
+        li.appendChild(label);
         li.appendChild(deleteBtn);
         list.appendChild(li);
     });
