@@ -359,7 +359,15 @@
 | 4 | 按「刪除」→ 項目消失 | ✅ 通過 |
 | 5 | 重新載入頁面 → todos 保留 | ✅ 通過 |
 
-> 瀏覽器端自動化複驗尚未執行，追蹤於 [Issue #1](https://github.com/chiisen/superpowers_todo/issues/1)。
+> 瀏覽器端自動化驗收已於 2026-08-26 執行（Playwright + Chromium），5 項全數通過，見下方「自動化驗收測試」。
+
+---
+
+## 自動化驗收測試（Playwright）
+
+本專案以 Playwright + headless Chromium 進行瀏覽器端 CRUD 驗收（新增 / Enter 新增 / 勾選 / 刪除 / 重整後 localStorage 保留）。2026-08-26 執行，5 項全數通過，無 JS 控制台錯誤。
+
+詳細的安裝步驟、可重現的 `qa.ts` 腳本與完整驗收結果，請見 [docs/testing/playwright-acceptance.md](docs/testing/playwright-acceptance.md)。
 
 ---
 
