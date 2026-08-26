@@ -1,0 +1,12 @@
+{
+  "name": "superpowers-todo-tests",
+  "version": "1.0.0",
+  "description": "瀏覽器端 CRUD 驗收測試（jsdom 模擬）",
+  "private": true,
+  "scripts": {
+    "test": "node test/acceptance.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}
