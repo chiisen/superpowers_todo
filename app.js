@@ -32,10 +32,11 @@ function saveTodos(todos) {
     }
 }
 
+let todos = [];
+
 function renderTodos() {
     const list = document.getElementById('todo-list');
     const emptyHint = document.getElementById('empty-hint');
-    const todos = loadTodos();
     
     list.innerHTML = '';
     
@@ -72,7 +73,6 @@ function renderTodos() {
 function addTodo(text) {
     if (!text.trim()) return;
     
-    const todos = loadTodos();
     const newTodo = {
         id: genId(),
         text: text.trim(),
@@ -85,7 +85,6 @@ function addTodo(text) {
 }
 
 function toggleTodo(id) {
-    const todos = loadTodos();
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
     
@@ -95,7 +94,6 @@ function toggleTodo(id) {
 }
 
 function deleteTodo(id) {
-    const todos = loadTodos();
     const index = todos.findIndex(t => t.id === id);
     if (index === -1) return;
     
@@ -105,6 +103,7 @@ function deleteTodo(id) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    todos = loadTodos();
     renderTodos();
     
     const form = document.getElementById('todo-form');
